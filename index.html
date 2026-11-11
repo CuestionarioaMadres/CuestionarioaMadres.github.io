@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b1914">
+<title>Cuestionario en vivo: Madres y Abuelas de Plaza de Mayo</title>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{
+  --desk:#1b1914; --paper:#e2d8c0; --paper-hi:#f0e9d6; --ink:#16130e; --ink-2:#51493b; --red:#a3291f;
+  --c1:#b3382c; --c2:#2f5f93; --c3:#bd9017; --c4:#3f7550;
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .2  0 0 0 0 .15  0 0 0 0 .08  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{min-height:100vh;color:var(--ink);font:400 18px/1.5 "Old Standard TT",Georgia,"Times New Roman",serif;
+  background:var(--grain),radial-gradient(120% 90% at 50% 0%,#2b2821 0%,#14120e 72%);background-color:var(--desk);
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.stage{max-width:1240px;margin:0 auto;padding:30px clamp(14px,3vw,44px) 56px}
+.phone .stage{max-width:520px;padding:20px 14px 44px}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #f0e9d6;outline-offset:3px}
+
+/* recortes */
+.clip{position:relative;transform:rotate(var(--r,0deg));filter:drop-shadow(0 1px 1px rgba(0,0,0,.45)) drop-shadow(0 14px 16px rgba(0,0,0,.4))}
+.clip.straight{transform:none}
+.paper{position:relative;background:var(--grain),radial-gradient(130% 110% at 25% 15%,var(--paper-hi) 0%,var(--paper) 62%,#cbbf9e 100%);clip-path:var(--tear,none);padding:22px 24px}
+.paper.xl{padding:clamp(22px,3vw,40px)}
+.paper.c1,.paper.c2,.paper.c3,.paper.c4{color:#fff9ec}
+.paper.c1{background:var(--grain),var(--c1)}.paper.c2{background:var(--grain),var(--c2)}
+.paper.c3{background:var(--grain),var(--c3)}.paper.c4{background:var(--grain),var(--c4)}
+.tape{position:absolute;top:-13px;left:50%;width:112px;height:30px;background:rgba(214,196,150,.82);transform:translateX(-50%) rotate(var(--tr,-2deg));z-index:2;
+  clip-path:polygon(0 12%,3% 0,6% 14%,9% 2%,12% 12%,88% 12%,91% 0,94% 14%,97% 2%,100% 12%,100% 88%,97% 100%,94% 86%,91% 98%,88% 88%,12% 88%,9% 100%,6% 86%,3% 98%,0 88%)}
+
+/* tipografía */
+.typed{font-family:"Special Elite","Courier New",monospace;font-size:.95rem;color:var(--ink-2)}
+h1,h2,h3{font-weight:700;line-height:1.04;letter-spacing:-.012em}
+.h-xl{font-size:clamp(2.5rem,6.2vw,5rem);margin:6px 0 16px}
+.h-l{font-size:clamp(1.9rem,3.6vw,3rem)}
+.h-m{font-size:clamp(1.35rem,2.2vw,1.9rem);line-height:1.15}
+.deck{font-style:italic;font-size:1.15rem;color:var(--ink-2);max-width:34em}
+.rule{height:0;border-top:3px double var(--ink);margin:20px 0 16px}
+.q{font-size:clamp(1.6rem,3.4vw,2.9rem);line-height:1.12}
+
+.btn{appearance:none;border:0;background:var(--ink);color:var(--paper-hi);font-weight:700;font-size:1.15rem;padding:15px 26px;min-height:54px;box-shadow:5px 5px 0 var(--red);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--red)}
+.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.btn.wide{width:100%}
+
+.stamp{display:inline-block;font-family:"Special Elite","Courier New",monospace;font-size:1.55rem;text-transform:uppercase;letter-spacing:.07em;padding:.1em .6em;border:3px double currentColor;transform:rotate(-5deg);mix-blend-mode:multiply}
+.stamp.ok{color:#2a6a3a}.stamp.no{color:var(--red)}.stamp.ink{color:var(--ink)}
+
+/* anfitrión */
+.lobby{display:grid;grid-template-columns:1.4fr 1fr;gap:42px;align-items:start}
+.tags{display:flex;flex-wrap:wrap;gap:10px;min-height:46px}
+.tag{font-family:"Special Elite","Courier New",monospace;background:var(--paper-hi);border:1px solid var(--ink-2);padding:3px 12px;font-size:1.05rem;transform:rotate(var(--r,0deg));box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.empty{color:var(--ink-2);font-style:italic}
+#qr{display:grid;place-items:center;background:#fff;padding:14px;margin:16px auto 10px;width:max-content;max-width:100%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.url{font-family:"Special Elite","Courier New",monospace;font-size:.85rem;word-break:break-all;text-align:center;color:var(--ink-2)}
+.code{font-size:2.6rem;font-weight:700;text-align:center;letter-spacing:.14em;margin:6px 0 14px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:26px;color:#e8dfc8;flex-wrap:wrap}
+.topline .typed{color:#cfc5aa}
+.clock{font-size:2.6rem;font-weight:700;min-width:2ch;text-align:right;color:#f0e9d6}
+.bar{height:12px;background:rgba(0,0,0,.16);margin-bottom:22px}
+.bar i{display:block;height:100%;width:100%;background:var(--ink)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:26px 30px;margin-top:38px}
+.opt{position:relative}
+.opt .paper{display:flex;align-items:center;gap:18px;min-height:112px;padding:18px 22px;font-size:clamp(1.15rem,1.9vw,1.6rem);font-weight:700;line-height:1.22}
+.opt .L{flex:none;display:grid;place-items:center;width:52px;height:52px;background:var(--paper-hi);color:var(--ink);font-size:1.9rem;transform:rotate(-4deg)}
+.opt .n{margin-left:auto;font-size:2.2rem;padding-left:10px}
+.opt.dim{opacity:.34;filter:grayscale(.7)}
+.opt .stamp{position:absolute;right:14px;top:-18px;z-index:3;background:rgba(240,233,214,.9);animation:slam .32s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes slam{from{transform:rotate(-5deg) scale(1.9);opacity:0}to{transform:rotate(-5deg) scale(1);opacity:1}}
+.cols{display:grid;grid-template-columns:1.2fr 1fr;gap:34px;margin-top:40px;align-items:start}
+.board{list-style:none}
+.board li{display:flex;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px solid rgba(22,19,14,.28)}
+.board li:last-child{border:0}
+.board .r{font-size:1.9rem;font-weight:700;width:1.4ch;text-align:right}
+.board .nm{flex:1;font-family:"Special Elite","Courier New",monospace;font-size:1.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board .sc{font-size:1.5rem;font-weight:700}
+.board.big li{padding:14px 0}.board.big .r{font-size:3rem}.board.big .nm{font-size:1.5rem}.board.big .sc{font-size:2.4rem}
+.actions{display:flex;justify-content:flex-end;margin-top:38px}
+
+/* celular */
+.p-card .h-m{margin-bottom:14px}
+.field{width:100%;font:inherit;font-size:1.4rem;background:transparent;border:0;border-bottom:3px solid var(--ink);padding:10px 2px;margin:6px 0 22px;color:var(--ink);border-radius:0}
+.field:focus{outline:0;border-color:var(--red)}
+.p-opts{display:grid;gap:20px;margin-top:30px}
+.p-opts .opt .paper{min-height:78px;padding:14px 16px;font-size:1.12rem;gap:14px}
+.p-opts .opt .L{width:42px;height:42px;font-size:1.5rem}
+.p-opts button.opt{appearance:none;border:0;background:none;text-align:left;color:inherit;width:100%;padding:0}
+.p-opts button.opt:active{transform:scale(.985)}
+.big-n{font-size:clamp(3.4rem,18vw,5.4rem);font-weight:700;line-height:1}
+.center{text-align:center}
+.mt{margin-top:18px}
+.msg{margin-top:14px;color:var(--red);font-weight:700}
+.note{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--paper-hi);padding:8px 16px;font-family:"Special Elite","Courier New",monospace;font-size:.9rem;box-shadow:0 6px 18px rgba(0,0,0,.5);z-index:9}
+
+@media (max-width:860px){
+  .lobby,.cols{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr;gap:22px}
+  .opt .paper{min-height:88px}
+}
+@media (prefers-reduced-motion:reduce){.opt .stamp{animation:none}.btn{transition:none}}
+</style>
+</head>
+<body>
+<main id="root"></main>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const QUIZ=[
+ {q:"¿En qué año surgieron las Madres de Plaza de Mayo?",o:["1977","1983","1987","1976"],c:0,
+  e:"Surgieron en 1977, durante la última dictadura. El 30 de abril, catorce mujeres se reunieron por primera vez en la Plaza de Mayo."},
+ {q:"¿Cómo nacieron las tradicionales rondas de las Madres?",o:["Eran una danza tradicional","La policía les ordenó circular y empezaron a caminar alrededor de la Pirámide de Mayo","Lo decidió el gobierno","Se inspiraron en una marcha internacional"],c:1,
+  e:"Como la policía les ordenó circular, empezaron a caminar alrededor de la Pirámide de Mayo. Así nacieron las rondas."},
+ {q:"¿Qué símbolo usan las Madres en la cabeza?",o:["Una boina","Un sombrero","Un pañuelo blanco","Una cinta celeste"],c:2,
+  e:"El pañuelo blanco se volvió símbolo de identificación y, con los años, emblema de la lucha por los Derechos Humanos."},
+ {q:"¿Cuál es la diferencia entre Madres y Abuelas?",o:["Las Madres buscaban a sus hijos desaparecidos y las Abuelas a sus nietos apropiados","Las Madres buscaban a sus nietos y las Abuelas a sus hijos","Son exactamente lo mismo","Las Abuelas surgieron después de 1983"],c:0,
+  e:"Ambas luchaban por los Derechos Humanos, pero las Abuelas se concentraron en localizar a sus nietos y restituirles su identidad."},
+ {q:"¿Qué permite el índice de abuelidad?",o:["Calcular la edad de los abuelos","Establecer el vínculo biológico entre abuelos y nietos mediante información genética","Encontrar documentos perdidos","Registrar nacimientos nuevos"],c:1,
+  e:"Es un procedimiento científico que usa muestras de sangre de abuelos y otros familiares para saber si una persona pertenece a una familia que busca a un nieto."},
+ {q:"¿Qué se creó en 1987 mediante la Ley 23.511?",o:["La Casa de la Memoria","El Archivo General de la Nación","El Banco Nacional de Datos Genéticos","El Museo de los Derechos Humanos"],c:2,
+  e:"El Banco Nacional de Datos Genéticos guarda información genética de familiares de personas desaparecidas para identificar a los niños apropiados."},
+ {q:"¿Cuándo comenzó la última dictadura cívico-militar argentina?",o:["1973","1979","1982","1976"],c:3,
+  e:"Comenzó el 24 de marzo de 1976 y terminó en 1983, con el regreso de la democracia."},
+ {q:"¿Qué se conmemora cada 24 de marzo en la Argentina?",o:["El Día de la Independencia","El Día Nacional de la Memoria por la Verdad y la Justicia","El Día de la Bandera","El Día del Trabajador"],c:1,
+  e:"Es el Día Nacional de la Memoria por la Verdad y la Justicia, en recuerdo del golpe de 1976 y de las víctimas del terrorismo de Estado."},
+ {q:"¿Cómo se llama el informe de la CONADEP que documentó los crímenes de la dictadura?",o:["Nunca Más","Juicio a las Juntas","Punto Final","Memoria Viva"],c:0,
+  e:"En 1984 la CONADEP presentó el informe Nunca Más, que documentó miles de casos de desaparición forzada."},
+ {q:"¿Qué derecho busca restituir el trabajo de las Abuelas a cada nieto o nieta?",o:["El derecho al voto","El derecho a la propiedad","El derecho a viajar","El derecho a la identidad"],c:3,
+  e:"Buscan que cada persona apropiada recupere su verdadera identidad y pueda conocer su historia familiar."}
+];
+const TIME=20, LET=["A","B","C","D"], PREFIX="maplaza-";
+const root=document.getElementById("root");
+const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* recortes irregulares */
+function tear(){
+  const j=()=>(Math.random()*3.4).toFixed(1), p=[];
+  for(let x=0;x<=100;x+=3.4)p.push(`${x}% ${j()}px`);
+  for(let y=4;y<100;y+=8)p.push(`calc(100% - ${j()}px) ${y}%`);
+  for(let x=100;x>=0;x-=3.4)p.push(`${x}% calc(100% - ${j()}px)`);
+  for(let y=96;y>0;y-=8)p.push(`${j()}px ${y}%`);
+  return `polygon(${p.join(",")})`;
+}
+function dress(scope=root){
+  scope.querySelectorAll(".paper:not([data-d])").forEach(p=>{p.dataset.d=1;p.style.setProperty("--tear",tear())});
+  scope.querySelectorAll(".clip:not([data-d]),.tag:not([data-d])").forEach(c=>{
+    c.dataset.d=1;
+    if(!c.classList.contains("straight"))c.style.setProperty("--r",((Math.random()-.5)*(c.classList.contains("tag")?5:2)).toFixed(2)+"deg");
+    const t=c.querySelector(":scope > .tape");if(t)t.style.setProperty("--tr",((Math.random()-.5)*8).toFixed(1)+"deg");
+  });
+}
+function view(html,cls=""){document.body.className=cls;root.innerHTML=html;dress()}
+const tape=()=>'<i class="tape"></i>';
+const makeCode=()=>{const a="abcdefghjkmnpqrstuvwxyz23456789";return Array.from({length:5},()=>a[Math.floor(Math.random()*a.length)]).join("")};
+const fatal=(m)=>view(`<div class="stage"><div class="clip">${tape()}<div class="paper xl"><h2 class="h-l">No se pudo conectar</h2><p class="deck mt">${m}</p></div></div></div>`);
+
+/* ============================ ANFITRIÓN ============================ */
+function host(){
+  if(typeof Peer==="undefined")return fatal("No se cargó PeerJS. Revisá la conexión a internet y recargá la página.");
+  const players=new Map();
+  let phase="lobby",qi=-1,t0=0,timer=null,code=makeCode(),peer,counts=[0,0,0,0];
+  const base=location.origin+location.pathname;
+  const url=()=>`${base}?j=${code}`;
+  const live=()=>[...players.values()].filter(p=>!p.gone);
+  const ranked=()=>[...players.values()].sort((a,b)=>b.score-a.score);
+  const send=(p,m)=>{try{p.conn.open&&p.conn.send(m)}catch(e){}};
+  const all=m=>players.forEach(p=>send(p,m));
+
+  function open(){
+    peer=new Peer(PREFIX+code);
+    peer.on("open",lobby);
+    peer.on("disconnected",()=>{try{peer.reconnect()}catch(e){}});
+    peer.on("error",e=>{
+      if(e.type==="unavailable-id"){code=makeCode();open()}
+      else if(e.type==="network"||e.type==="server-error"||e.type==="socket-error"||e.type==="socket-closed")fatal("No se pudo contactar al servidor de PeerJS. Verificá tu conexión e intentá de nuevo.");
+    });
+    peer.on("connection",c=>{
+      c.on("data",d=>onData(c,d));
+      c.on("close",()=>drop(c));c.on("error",()=>drop(c));
+    });
+  }
+  function drop(c){
+    const p=players.get(c.peer);if(!p)return;
+    if(phase==="lobby"){players.delete(c.peer);tags()}else{p.gone=true;if(phase==="q")counter()}
+  }
+  function onData(c,d){
+    if(!d||typeof d!=="object")return;
+    if(d.t==="join"){
+      if(phase!=="lobby"){try{c.send({t:"late"})}catch(e){}return}
+      const name=String(d.name||"").replace(/\s+/g," ").trim().slice(0,18)||"Anónimo";
+      players.set(c.peer,{conn:c,name,score:0,hits:0,ans:null,ms:0,gone:false});
+      c.send({t:"in",name});tags();
+    }else if(d.t==="ans"){
+      const p=players.get(c.peer);
+      if(!p||phase!=="q"||p.ans!=null||d.q!==qi||!Number.isInteger(d.k)||d.k<0||d.k>3)return;
+      p.ans=d.k;p.ms=Date.now()-t0;send(p,{t:"got"});counter();
+      if(live().length&&live().every(x=>x.ans!=null))setTimeout(()=>{if(phase==="q")reveal()},700);
+    }
+  }
+
+  function lobby(){
+    phase="lobby";qi=-1;clearInterval(timer);
+    [...players].forEach(([k,p])=>{if(p.gone)players.delete(k)});
+    players.forEach(p=>{p.score=0;p.hits=0;p.ans=null});
+    all({t:"lobby"});
+    const warn=location.protocol==="file:"?'<p class="msg">Subí este archivo a una página web (https) para que los celulares puedan abrir el enlace.</p>':"";
+    view(`<div class="stage"><div class="lobby">
+      <section class="clip">${tape()}<div class="paper xl">
+        <p class="typed">Edición especial — cuestionario en vivo</p>
+        <h1 class="h-xl">Madres y Abuelas de Plaza de Mayo</h1>
+        <p class="deck">Escaneá el código, escribí tu nombre y respondé desde el celular. Cuanto más rápido contestes, más puntos sumás.</p>
+        <div class="rule"></div>
+        <h3 class="h-m">En la sala: <span id="cnt">0</span></h3>
+        <div class="tags mt" id="tags"></div>
+      </div></section>
+      <aside class="clip">${tape()}<div class="paper xl">
+        <h2 class="h-m center">Escaneá para jugar</h2>
+        <div id="qr"></div>
+        <p class="url">${E(url())}</p>
+        <p class="code">${code.toUpperCase()}</p>
+        <button class="btn wide" id="start" disabled>Empezar</button>${warn}
+      </div></aside></div></div>`,"host");
+    try{new QRCode(document.getElementById("qr"),{text:url(),width:230,height:230,colorDark:"#16130e",colorLight:"#ffffff"})}catch(e){}
+    document.getElementById("start").onclick=nextQ;
+    tags();
+  }
+  function tags(){
+    const t=document.getElementById("tags");if(!t)return;
+    const n=players.size;
+    document.getElementById("cnt").textContent=n;
+    t.innerHTML=n?[...players.values()].map(p=>`<span class="tag">${E(p.name)}</span>`).join(""):'<span class="empty">Todavía no entró nadie.</span>';
+    document.getElementById("start").disabled=!n;
+    dress(t);
+  }
+
+  function nextQ(){
+    qi++;phase="q";t0=Date.now();counts=[0,0,0,0];
+    players.forEach(p=>p.ans=null);
+    const d=QUIZ[qi];
+    all({t:"q",i:qi,n:QUIZ.length,q:d.q,o:d.o,time:TIME});
+    view(`<div class="stage">
+      <div class="topline"><span class="typed">Pregunta ${qi+1} de ${QUIZ.length}</span><span class="typed" id="ansd"></span><span class="clock" id="sec">${TIME}</span></div>
+      <div class="clip">${tape()}<div class="paper xl"><div class="bar"><i id="bar"></i></div><h2 class="q">${E(d.q)}</h2></div></div>
+      <div class="opts">${d.o.map((t,k)=>`<div class="opt clip">${tape()}<div class="paper c${k+1}"><span class="L">${LET[k]}</span><span>${E(t)}</span></div></div>`).join("")}</div>
+      <div class="actions"><button class="btn" id="skip">Cerrar ronda</button></div>
+    </div>`,"host");
+    document.getElementById("skip").onclick=reveal;
+    counter();
+    clearInterval(timer);
+    timer=setInterval(()=>{
+      const left=Math.max(0,TIME-(Date.now()-t0)/1000);
+      const b=document.getElementById("bar"),s=document.getElementById("sec");
+      if(b)b.style.width=(left/TIME*100)+"%";if(s)s.textContent=Math.ceil(left);
+      if(left<=0)reveal();
+    },100);
+  }
+  function counter(){
+    const el=document.getElementById("ansd");if(!el)return;
+    const l=live();el.textContent=`${l.filter(p=>p.ans!=null).length} de ${l.length} respondieron`;
+  }
+
+  function reveal(){
+    if(phase!=="q")return;
+    phase="rev";clearInterval(timer);
+    const d=QUIZ[qi];counts=[0,0,0,0];
+    players.forEach(p=>{
+      let ok=false,gain=0;
+      if(p.ans!=null){counts[p.ans]++;ok=p.ans===d.c}
+      if(ok){gain=Math.round(500+500*(1-Math.min(p.ms/1000,TIME)/TIME));p.score+=gain;p.hits++}
+      p.ok=ok;p.gain=gain;
+    });
+    const r=ranked();
+    r.forEach((p,i)=>send(p,{t:"res",ok:p.ok,gain:p.gain,score:p.score,rank:i+1,of:r.length,c:d.c,answered:p.ans!=null}));
+    const last=qi===QUIZ.length-1;
+    view(`<div class="stage">
+      <div class="topline"><span class="typed">Pregunta ${qi+1} de ${QUIZ.length}</span><span class="typed">Resultado de la ronda</span></div>
+      <div class="clip">${tape()}<div class="paper xl"><h2 class="q">${E(d.q)}</h2></div></div>
+      <div class="opts" style="margin-top:34px">${d.o.map((t,k)=>`<div class="opt clip${k===d.c?"":" dim"}">${k===d.c?'<span class="stamp ok">Correcta</span>':""}<div class="paper c${k+1}"><span class="L">${LET[k]}</span><span>${E(t)}</span><span class="n">${counts[k]}</span></div></div>`).join("")}</div>
+      <div class="cols">
+        <div class="clip">${tape()}<div class="paper xl"><p class="typed">Para entender</p><p class="h-m mt" style="font-weight:400;line-height:1.35">${E(d.e)}</p></div></div>
+        <div class="clip">${tape()}<div class="paper xl"><h3 class="h-m">Puntajes</h3><ol class="board mt">${r.slice(0,5).map((p,i)=>`<li><span class="r">${i+1}</span><span class="nm">${E(p.name)}</span><span class="sc">${p.score}</span></li>`).join("")||'<li class="empty">Sin jugadores</li>'}</ol></div></div>
+      </div>
+      <div class="actions"><button class="btn" id="nx">${last?"Ver resultado final":"Siguiente pregunta"}</button></div>
+    </div>`,"host");
+    document.getElementById("nx").onclick=last?finish:nextQ;
+  }
+
+  function finish(){
+    phase="end";
+    const r=ranked();
+    r.forEach((p,i)=>send(p,{t:"end",score:p.score,rank:i+1,of:r.length,hits:p.hits,n:QUIZ.length}));
+    view(`<div class="stage"><div class="lobby">
+      <section class="clip">${tape()}<div class="paper xl">
+        <p class="typed">Edición especial — resultado final</p>
+        <h1 class="h-xl">Así quedó la tabla</h1>
+        <ol class="board big mt">${r.slice(0,5).map((p,i)=>`<li><span class="r">${i+1}</span><span class="nm">${E(p.name)}</span><span class="sc">${p.score}</span></li>`).join("")||'<li class="empty">Nadie jugó esta vez.</li>'}</ol>
+      </div></section>
+      <aside class="clip">${tape()}<div class="paper xl center">
+        <span class="stamp ink">Memoria, Verdad y Justicia</span>
+        <p class="deck mt" style="margin-inline:auto">Gracias por jugar. La búsqueda de los nietos y nietas continúa.</p>
+        <button class="btn wide mt" id="again">Jugar de nuevo</button>
+      </div></aside></div></div>`,"host");
+    document.getElementById("again").onclick=lobby;
+  }
+  document.addEventListener("keydown",e=>{
+    if(e.target.closest&&e.target.closest("input,textarea"))return;
+    if(e.key!=="Enter"&&e.key!==" ")return;
+    const id=phase==="lobby"?"start":phase==="q"?"skip":phase==="rev"?"nx":phase==="end"?"again":null;
+    const b=id&&document.getElementById(id);
+    if(b&&!b.disabled){e.preventDefault();b.click()}
+  });
+  open();
+}
+
+/* ============================== CELULAR ============================== */
+function player(code){
+  let peer,conn,name="",cur=null,tick=null,answered=false;
+  const pv=h=>view(`<div class="stage">${h}</div>`,"phone");
+  const card=(inner,cls="")=>`<div class="clip ${cls}">${tape()}<div class="paper">${inner}</div></div>`;
+
+  function joinScreen(msg=""){
+    pv(card(`<p class="typed">Cuestionario en vivo</p><h1 class="h-l mt" style="margin-bottom:6px">Madres y Abuelas de Plaza de Mayo</h1>
+      <p class="deck">Escribí tu nombre para entrar.</p>
+      <label class="typed mt" for="nm" style="display:block;margin-top:22px">Tu nombre</label>
+      <input class="field" id="nm" maxlength="18" autocomplete="nickname" autocapitalize="words" value="${E(name)}">
+      <button class="btn wide" id="go">Entrar</button><p class="msg" id="err">${msg}</p>`));
+    const go=document.getElementById("go"),nm=document.getElementById("nm");
+    const submit=()=>{name=nm.value.trim();if(!name){nm.focus();return}go.disabled=true;connect()};
+    go.onclick=submit;nm.onkeydown=e=>{if(e.key==="Enter")submit()};
+  }
+  function connect(){
+    if(typeof Peer==="undefined")return joinScreen("No se cargó PeerJS. Revisá tu conexión y recargá.");
+    const err=m=>{joinScreen(m)};
+    try{peer&&peer.destroy()}catch(e){}
+    peer=new Peer();
+    const to=setTimeout(()=>err("No pudimos conectar con la sala. Probá de nuevo."),12000);
+    peer.on("error",e=>{clearTimeout(to);err(e.type==="peer-unavailable"?"No encontramos esa sala. Escaneá el QR de nuevo.":"Error de conexión. Probá de nuevo.")});
+    peer.on("open",()=>{
+      conn=peer.connect(PREFIX+code,{reliable:true});
+      conn.on("open",()=>conn.send({t:"join",name}));
+      conn.on("data",d=>{clearTimeout(to);onMsg(d)});
+      conn.on("close",lost);conn.on("error",lost);
+    });
+  }
+  function lost(){clearInterval(tick);pv(card(`<h2 class="h-m">Se perdió la conexión</h2><p class="deck">Volvé a entrar a la sala.</p><button class="btn wide mt" id="re">Entrar de nuevo</button>`));document.getElementById("re").onclick=()=>joinScreen()}
+  function wait(t,s){clearInterval(tick);pv(card(`<p class="typed">${E(name)}</p><h2 class="h-l mt">${t}</h2><p class="deck mt">${s}</p>`))}
+  function onMsg(d){
+    if(d.t==="in"||d.t==="lobby")wait("Estás adentro","Mirá la pantalla. La primera pregunta aparece en cuanto el anfitrión empiece.");
+    else if(d.t==="late")wait("El juego ya empezó","Esperá a la próxima ronda para jugar.");
+    else if(d.t==="q")question(d);
+    else if(d.t==="res")result(d);
+    else if(d.t==="end")final(d);
+  }
+  function question(d){
+    cur=d;answered=false;const t0=Date.now();
+    pv(`<p class="typed" style="color:#cfc5aa">Pregunta ${d.i+1} de ${d.n}</p>
+      <div class="clip mt">${tape()}<div class="paper"><div class="bar"><i id="pb"></i></div><h2 class="h-m">${E(d.q)}</h2></div></div>
+      <div class="p-opts">${d.o.map((t,k)=>`<button class="opt clip" data-k="${k}"><div class="paper c${k+1}"><span class="L">${LET[k]}</span><span>${E(t)}</span></div></button>`).join("")}</div>`);
+    document.querySelectorAll(".p-opts .opt").forEach(b=>b.onclick=()=>{
+      if(answered)return;answered=true;clearInterval(tick);
+      conn.send({t:"ans",q:d.i,k:+b.dataset.k});
+      wait("Respuesta enviada","Esperá el resultado en la pantalla.");
+    });
+    clearInterval(tick);
+    tick=setInterval(()=>{
+      const left=Math.max(0,d.time-(Date.now()-t0)/1000),b=document.getElementById("pb");
+      if(b)b.style.width=(left/d.time*100)+"%";
+      if(left<=0&&!answered){answered=true;clearInterval(tick);wait("Se acabó el tiempo","Esperá el resultado en la pantalla.")}
+    },100);
+  }
+  function result(d){
+    clearInterval(tick);
+    const stamp=d.ok?'<span class="stamp ok">Correcta</span>':`<span class="stamp no">${d.answered?"Incorrecta":"Sin respuesta"}</span>`;
+    const was=!d.ok&&cur?`<p class="deck mt">La correcta era: ${E(cur.o[d.c])}</p>`:"";
+    pv(card(`<div class="center">${stamp}<p class="big-n mt">${d.ok?"+"+d.gain:"0"}</p><p class="typed">puntos en esta ronda</p>${was}
+      <div class="rule"></div><p class="h-m">Total: ${d.score}</p><p class="deck">Vas ${d.rank}.º de ${d.of}</p></div>`));
+  }
+  function final(d){
+    clearInterval(tick);
+    const t=d.rank===1?"¡Ganaste!":d.rank<=3?"¡Quedaste en el podio!":"¡Gracias por jugar!";
+    pv(card(`<div class="center"><p class="typed">Resultado final</p><h2 class="h-l mt">${t}</h2><p class="big-n mt">${d.score}</p><p class="typed">puntos</p>
+      <p class="deck mt" style="margin-inline:auto">Puesto ${d.rank} de ${d.of}, con ${d.hits} de ${d.n} respuestas correctas.</p>
+      <div class="mt"><span class="stamp ink">Memoria, Verdad y Justicia</span></div></div>`));
+  }
+  joinScreen();
+}
+
+try{navigator.wakeLock&&navigator.wakeLock.request("screen").catch(()=>{})}catch(e){}
+document.addEventListener("visibilitychange",()=>{try{if(!document.hidden&&navigator.wakeLock)navigator.wakeLock.request("screen").catch(()=>{})}catch(e){}});
+const code=new URLSearchParams(location.search).get("j");
+(code&&/^[a-z0-9]{3,12}$/i.test(code))?player(code.toLowerCase()):host();
+</script>
+</body>
+</html>
